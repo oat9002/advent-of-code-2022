@@ -1,5 +1,6 @@
 fun main(args: Array<String>) {
     part1()
+    part2()
 }
 
 fun getScore(input: String): Int {
@@ -24,12 +25,26 @@ fun part1() {
     println(result)
 }
 
-fun part2(allPossibilities: HashMap<String, Int>) {
-    val input = object{}::class.java.getResource("day2_2.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
-    val replaceMap = hashMapOf(
-        "A X" to "A Y", "A Y" to "A X", "A Z" to "A Y",
-        "B X" to " ", "B Y" to 5, "B Z" to 9,
-        "C X" to 7, "C Y" to 2, "C Z" to 6
-    )
+fun getScorePart2(input: String): Int {
+    val scoreMap = hashMapOf("X" to 1, "Y" to 2, "Z" to 3)
+    val sp = input.split(" ")
+    val opponent = sp[0]
+    val me = scoreMap.getOrDefault(sp[1], 0)
+    val newValue = when(opponent) {
+        "A" -> if (me + 2 > 3) me - 1 else me + 2
+        "B" -> me
+        "C" -> if (me + 1 > 3) me - 2 else me + 1
+        else -> 0
+    }
+    val newChar = scoreMap.entries.find { it.value == newValue }?.key ?: ""
+    val newInput = "$opponent $newChar"
 
+    return getScore(newInput)
+}
+
+fun part2() {
+    val input = object{}::class.java.getResource("day2_2.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
+    val result = input.sumOf { getScorePart2(it) }
+
+    println(result)
 }
