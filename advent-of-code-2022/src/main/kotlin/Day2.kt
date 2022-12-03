@@ -1,22 +1,25 @@
 fun main(args: Array<String>) {
-    val allPossibilities = hashMapOf(
-        "A X" to 4, "A Y" to 8, "A Z" to 3,
-        "B X" to 1, "B Y" to 5, "B Z" to 9,
-        "C X" to 7, "C Y" to 2, "C Z" to 6
-    )
-
-    part1(allPossibilities)
+    part1()
 }
 
 fun getScore(input: String): Int {
+    val scoreMap = hashMapOf("A" to 1, "B" to 2, "C" to 3, "X" to 1, "Y" to 2, "Z" to 3)
     val sp = input.split(" ")
+    val opponent = scoreMap.getOrDefault(sp[0], 0)
+    val me = scoreMap.getOrDefault(sp[1], 0)
+    val result = Math.abs(if (me - opponent > 0) me - opponent - 3 else me - opponent)
 
-    return 1
+    return me + when(result) {
+        2 -> 6
+        1 -> 0
+        0 -> 3
+        else -> 0
+    }
 }
 
-fun part1(allPossibilities: HashMap<String, Int>) {
+fun part1() {
     val input = object{}::class.java.getResource("day2_1.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
-    val result = input.sumOf { allPossibilities.getOrDefault(it, 0) }
+    val result = input.sumOf { getScore(it) }
 
     println(result)
 }
