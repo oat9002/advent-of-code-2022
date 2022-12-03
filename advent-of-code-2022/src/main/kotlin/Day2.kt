@@ -1,6 +1,6 @@
 fun main(args: Array<String>) {
-    part1()
-    part2()
+    day2part1()
+    day2part2()
 }
 
 fun getScore(input: String): Int {
@@ -18,7 +18,7 @@ fun getScore(input: String): Int {
     }
 }
 
-fun part1() {
+fun day2part1() {
     val input = object{}::class.java.getResource("day2_1.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
     val result = input.sumOf { getScore(it) }
 
@@ -42,7 +42,7 @@ fun getScorePart2(input: String): Int {
     return getScore(newInput)
 }
 
-fun part2() {
+fun day2part2() {
     val input = object{}::class.java.getResource("day2_2.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
     val result = input.sumOf { getScorePart2(it) }
 
