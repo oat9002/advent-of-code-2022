@@ -21,11 +21,9 @@ fun findShareItemPriority(input: String): Int {
     r2.forEach {
         val dup = repeated.get(it)
 
-        if (dup != null) {
-            if (!dup) {
-                result += charToInt(it)
-                repeated.put(it, true)
-            }
+        if (dup != null && !dup) {
+            result += charToInt(it)
+            repeated.put(it, true)
         }
     }
 
@@ -40,20 +38,16 @@ fun findShareItemPriorityPart2(input: List<String>): Int {
     input[1].forEach {
         val count = repeated.get(it)
 
-        if (count != null) {
-            if (count == 1) {
-                repeated.put(it, 2)
-            }
+        if (count != null && count == 1) {
+            repeated.put(it, 2)
         }
     }
     input[2].forEach {
         val count = repeated.get(it)
 
-        if (count != null) {
-            if (count == 2) {
-                result += charToInt(it)
-                repeated.put(it, 3)
-            }
+        if (count != null && count == 2) {
+            result += charToInt(it)
+            repeated.put(it, 3)
         }
     }
 
