@@ -1,5 +1,6 @@
 fun main() {
     day3part1()
+    day3part2()
 }
 
 fun charToInt(c: Char): Int {
@@ -31,9 +32,44 @@ fun findShareItemPriority(input: String): Int {
     return result
 }
 
+fun findShareItemPriorityPart2(input: List<String>): Int {
+    val repeated = HashMap<Char, Int>()
+    var result = 0
+
+    input[0].forEach { repeated.put(it, 1) }
+    input[1].forEach {
+        val count = repeated.get(it)
+
+        if (count != null) {
+            if (count == 1) {
+                repeated.put(it, 2)
+            }
+        }
+    }
+    input[2].forEach {
+        val count = repeated.get(it)
+
+        if (count != null) {
+            if (count == 2) {
+                result += charToInt(it)
+                repeated.put(it, 3)
+            }
+        }
+    }
+
+    return result
+}
+
 fun day3part1() {
     val input = object{}::class.java.getResource("day3_1.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
     val result = input.sumOf { findShareItemPriority(it) }
+
+    println(result)
+}
+
+fun day3part2() {
+    val input = object{}::class.java.getResource("day3_2.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n").chunked(3)
+    val result = input.sumOf { findShareItemPriorityPart2(it) }
 
     println(result)
 }
