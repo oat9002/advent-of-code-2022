@@ -1,5 +1,3 @@
-import java.util.Stack
-
 fun main() {
     Day5.part1()
 }
@@ -50,6 +48,6 @@ object Day5 {
 
         val result = stacks.map { it.last() }.reduceRight {s, acc -> s + acc}
 
-        println("$result")
+        println(result)
     }
 }
