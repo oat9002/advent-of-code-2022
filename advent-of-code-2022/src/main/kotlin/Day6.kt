@@ -1,10 +1,11 @@
 fun main() {
     Day6.part1()
+    Day6.part2()
 }
 
 object Day6 {
 
-    fun findMarkerIndex(input: String): Int {
+    fun findMarkerIndex(input: String, numOfUniqueChar: Int): Int {
         val checkedStr = hashMapOf<Char, Int>()
         var start = 0
         var result = 0
@@ -20,7 +21,7 @@ object Day6 {
 
             checkedStr.put(input[i], i)
 
-            if (i - start + 1 == 4) {
+            if (i - start + 1 == numOfUniqueChar) {
                 result = i + 1
                 break
             }
@@ -30,7 +31,14 @@ object Day6 {
     }
     fun part1() {
         val input = object{}::class.java.getResource("day6_1.txt")?.readText(Charsets.UTF_8).orEmpty()
-        val result = findMarkerIndex(input)
+        val result = findMarkerIndex(input, 4)
+
+        println(result)
+    }
+
+    fun part2() {
+        val input = object{}::class.java.getResource("day6_2.txt")?.readText(Charsets.UTF_8).orEmpty()
+        val result = findMarkerIndex(input, 14)
 
         println(result)
     }
