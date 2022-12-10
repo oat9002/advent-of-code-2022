@@ -2,6 +2,7 @@ data class FileSystem(val name: String, val isDirectory: Boolean, var size: Int,
 
 fun main() {
     Day7.part1()
+    Day7.part2()
 }
 
 object Day7 {
@@ -76,11 +77,21 @@ object Day7 {
 
         return toReturn.toList()
     }
+
     fun part1() {
         val input = object{}::class.java.getResource("day7_1.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
         val fileSystem = transform(input)
         val result = getAllDirectories(fileSystem).map { it.size }.filter { it <= 100000 }.sum()
 
         println(result)
+    }
+
+    fun part2() {
+        val input = object{}::class.java.getResource("day7_2.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
+        val fileSystem = transform(input)
+        val neededSpace = Math.abs(40000000 - fileSystem.size)
+        val result = getAllDirectories(fileSystem).map { it.size }.filter { it>= neededSpace }.sorted()
+
+        println(result.first())
     }
 }
