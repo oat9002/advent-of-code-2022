@@ -1,5 +1,3 @@
-import java.io.File
-
 data class FileSystem(val name: String, val isDirectory: Boolean, var size: Int, val subFileSystem: ArrayList<FileSystem>)
 
 fun main() {
@@ -57,26 +55,32 @@ object Day7 {
         return root ?: FileSystem("", false, 0, arrayListOf())
     }
 
-//    fun getAllDirectories(root: FileSystem): List<FileSystem> {
-//        val toReturn = ArrayDeque<FileSystem>(0)
-//        val calTemp = ArrayDeque<FileSystem>(0)
-//        calTemp.add(root)
-//
-//        while (calTemp.size != 0) {
-//            val last = calTemp.last()
-//            val nonCalDirs = last.subFileSystem.filter { it.isDirectory && it.size == 0 }
-//            if (nonCalDirs.isNotEmpty() && last.size == 0) {
-//                calTemp.addAll(nonCalDirs)
-//            } else {
-//                last.size = last.subFileSystem.sumOf { it.size }
-//                calTemp.removeLast()
-//            }
-//        }
-//    }
+    fun getAllDirectories(root: FileSystem): List<FileSystem> {
+        val toReturn = ArrayList<FileSystem>(0)
+        val temp = ArrayDeque<FileSystem>(0)
+
+        temp.add(root)
+
+        while (temp.size != 0) {
+            val first = temp.first()
+            val dirs = first.subFileSystem.filter { it.isDirectory  }
+
+            toReturn.add(first)
+
+            if (dirs.isNotEmpty()) {
+                temp.addAll(dirs)
+            }
+
+            temp.removeFirst()
+        }
+
+        return toReturn.toList()
+    }
     fun part1() {
         val input = object{}::class.java.getResource("day7_1.txt")?.readText(Charsets.UTF_8).orEmpty().split("\n")
         val fileSystem = transform(input)
+        val result = getAllDirectories(fileSystem).map { it.size }.filter { it <= 100000 }.sum()
 
-
+        println(result)
     }
 }
