@@ -3,18 +3,18 @@ fun main() {
     Day9.part2()
 }
 object Day9 {
-    data class Rope(val name: String, var xAxis: Int, var yAxis: Int, var next: Rope? = null) {
+    data class Rope(val name: String, var column: Int, var row: Int, var next: Rope? = null) {
         fun isTail(): Boolean {
             return next == null
         }
 
         fun isNextToParent(previous: Rope): Boolean {
-            return Math.abs(previous.xAxis - xAxis) <= 1 && Math.abs(previous.yAxis - yAxis) <= 1
+            return Math.abs(previous.column - column) <= 1 && Math.abs(previous.row - row) <= 1
         }
 
-        fun move(x: Int, y: Int) {
-            xAxis = x
-            yAxis = y
+        fun move(column: Int, row: Int) {
+            this.column = column
+            this.row = row
             moveTail(next)
         }
 
@@ -24,28 +24,24 @@ object Day9 {
             }
 
             if (!n.isNextToParent(this)) {
-                val diffX = Math.abs(xAxis - n.xAxis)
-                val diffY = Math.abs(yAxis - n.yAxis)
-                if (diffX == diffY) {
-                    n.xAxis = xAxis
-                    n.yAxis = if (yAxis > n.yAxis)  yAxis - 1 else yAxis + 1
-                } else if (diffX > diffY) {
-                    n.yAxis = yAxis
+                val diffCol = Math.abs(column - n.column)
+                val diffRow = Math.abs(row - n.row)
 
-                    if (xAxis > n.xAxis) {
-                        n.xAxis = xAxis - 1
-                        n.yAxis = yAxis
+                if (diffCol > diffRow) {
+                    if (diffCol <= 1 || diffRow <= 1) {
+                        n.column = if (column > n.column) column - 1 else column + 1
+                        n.row = row
                     } else {
-                        n.xAxis = xAxis + 1
-                        n.yAxis = yAxis
+                        n.column = if (column > n.column) column - 1 else column + 1
+                        n.row = if (row > n.row) row - 1 else row + 1
                     }
                 } else {
-                    if (yAxis > n.yAxis) {
-                        n.xAxis = xAxis
-                        n.yAxis = yAxis - 1
+                    if (diffCol <= 1) {
+                        n.column = column
+                        n.row =  if (row > n.row) row - 1 else row + 1
                     } else {
-                        n.xAxis = xAxis
-                        n.yAxis = yAxis + 1
+                        n.column = if (column > n.column) column - 1 else column + 1
+                        n.row =  if (row > n.row) row - 1 else row + 1
                     }
                 }
             }
@@ -90,16 +86,61 @@ object Day9 {
 
             handler(times) {
                 when(command) {
-                    "U" -> head.move(head.xAxis, head.yAxis + 1)
-                    "R" -> head.move(head.xAxis + 1, head.yAxis)
-                    "D" -> head.move(head.xAxis, head.yAxis - 1)
-                    "L" -> head.move(head.xAxis - 1, head.yAxis)
+                    "U" -> head.move(head.column, head.row + 1)
+                    "R" -> head.move(head.column + 1, head.row)
+                    "D" -> head.move(head.column, head.row - 1)
+                    "L" -> head.move(head.column - 1, head.row)
                     else -> println("Unknown command, $command")
                 }
 
                 val tail = head.getTail()
                 tailMovementAtLeastOnce.add(tail.copy())
             }
+        }
+
+        fun printTail() {
+            for (i in 26 downTo -25) {
+                for (j in -26 until 26) {
+                    if (i == 0 && j == 0) {
+                        print("s")
+                    }
+                    else if (tailMovementAtLeastOnce.map { Pair(it.row, it.column) }.contains(Pair(i, j))) {
+                        print("#")
+                    } else {
+                        print(".")
+                    }
+                }
+                println()
+            }
+
+            println("\n\n\n\n")
+        }
+
+        fun print() {
+            val listOfRopes = arrayListOf<Rope>()
+            var temp: Rope? = head
+
+            while(temp != null) {
+                listOfRopes.add(temp.copy())
+
+                temp = temp.next
+            }
+
+            for (i in 26 downTo -25) {
+                for (j in -26 until 26) {
+                    val rope = listOfRopes.find { it.column == j && it.row == i }
+
+                    if (rope != null) {
+                        print(rope.name)
+                    }
+                    else {
+                        print(".")
+                    }
+                }
+                println()
+            }
+
+            println("\n\n\n\n")
         }
     }
     fun part1() {
@@ -119,21 +160,6 @@ object Day9 {
 
         for (i in input) {
             grid.move(i)
-        }
-
-
-        for (i in -26 until 26) {
-            for (j in -26 until 26) {
-                if (i == 0 && j == 0) {
-                    print("s")
-                }
-                else if (grid.tailMovementAtLeastOnce.map { Pair(it.xAxis, it.yAxis) }.contains(Pair(i, j))) {
-                    print("#")
-                } else {
-                    print(".")
-                }
-            }
-            println()
         }
 
         println(grid.tailMovementAtLeastOnce.size)
